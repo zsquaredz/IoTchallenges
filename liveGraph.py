@@ -2,9 +2,12 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import time
 import random
+import serial
 
 fig = plt.figure()
 ax1 = fig.add_subplot(1,1,1)
+y = 0
+prev = 0
 
 
 def animate(i):
@@ -22,12 +25,35 @@ def animate(i):
     ax1.clear()
     ax1.plot(xar,yar)
 
+def readBit():
+    global prev
+    ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
+    rcv = ser.readline()
+    cmd = rcv.decode('utf-8').rstrip()
+    if cmd.isnumeric():
+        prev = int(cmd)
+        return prev
+    elif ' ' in cmd:
+        return prev
+    elif '-' in cmd:
+        cmd = cmd.replace("-", "", 1)
+        if '-' in cmd:
+            return prev
+        else:
+            prev = - int(cmd)
+            return prev
+    else:
+        return prev
+
+
 
 def writeToFile(x):
     data = open("sampleText.txt","a")
-    y = random.randint(1,10)
+    y = readBit()
     data.write("{},{}\n".format(x+1,y))
     data.close()
+    print('{}, {}'.format(x,y))
 
-ani = animation.FuncAnimation(fig, animate, interval=1000)
+
+ani = animation.FuncAnimation(fig, animate, interval=100)
 plt.show()
