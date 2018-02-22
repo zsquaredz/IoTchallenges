@@ -57,3 +57,6 @@ def writeToFile(x):
 
 ani = animation.FuncAnimation(fig, animate, interval=100)
 plt.show()
+data = open('sampleText.txt','w')
+data.write('0,0\n')
+data.close()
