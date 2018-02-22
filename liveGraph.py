@@ -3,6 +3,7 @@ import matplotlib.animation as animation
 import time
 import random
 import serial
+import numpy as np
 
 fig = plt.figure()
 ax1 = fig.add_subplot(1,1,1)
@@ -22,6 +23,7 @@ def animate(i):
             x,y = eachLine.split(',')
             xar.append(int(x))
             yar.append(int(y))
+    print(np.std(yar))
     ax1.clear()
     ax1.plot(xar,yar)
 
